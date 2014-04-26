@@ -16,7 +16,7 @@ extra-source-files:
 Bug-Reports:         https://github.com/sdiehl/vector-eigenvalues/issues
 
 Description:
-  Standalone foreign interface for LAPACK eigenvalues.
+  Standalone foreign interface for LAPACK eigenvalue sovler.
 Source-Repository head
     Type: git
     Location: git@github.com:sdiehl/vector-eigenvalues.git

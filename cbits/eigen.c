@@ -1,4 +1,3 @@
-// clang -o eigen eigs.c -llapack -lblas -lgfortran -lm
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -8,7 +7,6 @@ extern void dgeev_( char *jobvl, char *jobvr, int *n, double *a,
 
 double POS_INF = 1.0 / 0.0;
 
-/* Compute eignevalues for linear matrix */
 int eigenvalues(int n, double *a, double *out)
 {
     int j;

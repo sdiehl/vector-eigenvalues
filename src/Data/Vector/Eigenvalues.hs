@@ -1,6 +1,12 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 
-module Data.Vector.Eigenvalues where
+
+module Data.Vector.Eigenvalues (
+  eigvals
+) where
 
 import Foreign.Ptr
 import Foreign.C.Types
@@ -9,22 +15,36 @@ import Foreign.ForeignPtr
 import qualified Data.Vector.Storable as V
 import qualified Data.Vector.Storable.Mutable as VM
 
-foreign import ccall safe "eigen.h eigenvalues" eigenvals
+foreign import ccall safe "eigen.h eigen_float" eigen_float
     :: Int -> Ptr a -> Ptr a -> IO Int
+
+foreign import ccall safe "eigen.h eigen_double" eigen_double
+    :: Int -> Ptr a -> Ptr a -> IO Int
+
+class Eigenvalues a where
+  eigvals :: Int -> a -> IO (Maybe a)
+
+instance Eigenvalues (V.Vector Float) where
+  eigvals = eigen_worker eigen_float
+
+instance Eigenvalues (V.Vector Double) where
+  eigvals = eigen_worker eigen_double
 
 vecPtr :: VM.Storable a => VM.MVector s a -> ForeignPtr a
 vecPtr = fst . VM.unsafeToForeignPtr0
 
-eigvals :: Int -> V.Vector CDouble -> IO (Maybe (V.Vector CDouble))
-eigvals n vs = do
+eigen_worker :: VM.Storable a
+             => (Int -> Ptr a -> Ptr a -> IO Int) -- worker function
+             -> Int                               -- dimension
+             -> V.Vector a                        -- input vector
+             -> IO (Maybe (V.Vector a))           -- output
+eigen_worker fn n vs = do
   v <- V.thaw vs
   out <- VM.new n
   rc <- withForeignPtr (vecPtr v) $ \inptr -> do
     withForeignPtr (vecPtr out) $ \outptr -> do
-      eigenvals n inptr outptr
+      fn n inptr outptr
   out' <- V.freeze out
-
-  if rc == 0 then
-    return $ Just out'
-  else
-    return Nothing
+  if rc == 0
+    then return $ Just out'
+    else return Nothing

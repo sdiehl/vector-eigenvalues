@@ -6,7 +6,7 @@ import Foreign.C.Types
 import Data.Vector.Storable
 import Data.Vector.Eigenvalues
 
-mat :: Vector CDouble
+mat :: Vector Double
 mat = fromList [
      0, 1, 2,
      3, 4, 5,

@@ -2,15 +2,12 @@
 
 module Main where
 
-import Foreign.Ptr
 import Foreign.C.Types
-import Foreign.ForeignPtr
-
-import qualified Data.Vector.Storable as V
+import Data.Vector.Storable
 import Data.Vector.Eigenvalues
 
-mat :: V.Vector CDouble
-mat = V.fromList [
+mat :: Vector CDouble
+mat = fromList [
      0, 1, 2,
      3, 4, 5,
      6, 7, 8
@@ -18,5 +15,6 @@ mat = V.fromList [
 
 main :: IO ()
 main = do
-  vec <- eigvals 3 mat
-  print vec
+  eigs <- eigvals 3 mat
+  print eigs
+-- Just (fromList [13.348469228349522,-1.3484692283495336,-9.991844527712246e-16])

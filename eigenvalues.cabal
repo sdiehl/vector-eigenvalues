@@ -19,7 +19,7 @@ Description:
   Standalone foreign interface for LAPACK eigenvalues.
 Source-Repository head
     Type: git
-    Location: git@github.com:sdiehl/haskell-picosat.git
+    Location: git@github.com:sdiehl/vector-eigenvalues.git
 
 library
   exposed-modules:     
@@ -28,8 +28,10 @@ library
   other-extensions:
     ForeignFunctionInterface
 
-  ghc-options:        -Wall -fwarn-tabs -O2 -llapack
-  cc-options:         -O3 -llapack
+  extra-libraries:    lapack
+  ghc-options:        -Wall -fwarn-tabs -O2
+  cc-options:         -O3
+
   default-language:   Haskell2010
   Hs-source-dirs:     src
   Include-dirs:       cbits

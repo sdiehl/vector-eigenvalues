@@ -18,7 +18,7 @@ vecPtr = fst . VM.unsafeToForeignPtr0
 eigvals :: Int -> V.Vector CDouble -> IO (Maybe (V.Vector CDouble))
 eigvals n vs = do
   v <- V.thaw vs
-  out <- VM.new 3
+  out <- VM.new n
   rc <- withForeignPtr (vecPtr v) $ \inptr -> do
     withForeignPtr (vecPtr out) $ \outptr -> do
       eigenvals n inptr outptr
